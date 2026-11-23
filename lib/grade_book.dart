@@ -22,6 +22,11 @@ enum Grade {
   // Grade.values and return the first grade whose minAverage is not above
   // the average.
   static Grade forAverage(double average) {
+    for (var grade in Grade.values) {
+      if (grade.minAverage <= average) {
+        return grade;
+      }
+    }
     return Grade.f;
   }
 }
@@ -49,7 +54,14 @@ class Student {
   // TODO 4: Move `average` from bin/grade_book_v0.dart here. Return null if
   // there are no marks; otherwise add up the marks and divide by how many.
   double? get average {
-    return null;
+    if (_marks.isEmpty) {
+      return null;
+    }
+    var total = 0;
+    for (var mark in _marks) {
+      total += mark;
+    }
+    return total / _marks.length;
   }
 
   /// Null safety: `average` may be null, so `grade` may be null too. Copy the
@@ -91,7 +103,7 @@ class GradeBook {
   // TODO 5: Return the student with this name, or null if there is none.
   // A Map lookup already gives exactly that.
   Student? find(String name) {
-    return null;
+    return _students[name];
   }
 
   /// Null safety: `find` may return null, so check before using the student.
@@ -107,7 +119,16 @@ class GradeBook {
   // student with the highest average, or null if no student has marks.
   // The old version returns a name; this one returns the Student.
   Student? get topStudent {
-    return null;
+    Student? bestStudent;
+    double? bestAverage;
+    for (var student in _students.values) {
+      var studentAverage = student.average;
+      if (studentAverage != null && (bestAverage == null || studentAverage > bestAverage)) {
+        bestAverage = studentAverage;
+        bestStudent = student;
+      }
+    }
+    return bestStudent;
   }
 
   String report() {
